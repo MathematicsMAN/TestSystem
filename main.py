@@ -1,3 +1,4 @@
+import json
 from tkinter import *
 from tkinter import messagebox as mb
 
@@ -12,28 +13,28 @@ root = Tk()
 root.title("Тест")
 root.geometry('420x300')
 
-ask1 = Label(text="Сколько будет 2 + 2?",
-             font=('Comic San MS', 24, 'bold'),
-             bg='#112233', fg='#00FF00', bd=5
-             )
-ask1.pack(anchor='n')
+with open("test.json", "r", encoding="UTF-8") as file_in:
+    data = json.load(file_in)
 
-right_ans = 4
+for ask in data["asks"]:
+    ask1 = Label(text=ask["ask"],
+                 font=('Comic San MS', 24, 'bold'),
+                 bg='#112233', fg='#00FF00', bd=5
+                 )
+    ask1.pack(anchor='n')
 
-var = IntVar()
-var.set(0)
-ans1 = Radiobutton(text='3', value=3, variable=var,
-                   font=('Comic San MS', 24, 'bold'))
-ans2 = Radiobutton(text='4', value=4, variable=var,
-                   font=('Comic San MS', 24, 'bold'))
-ans3 = Radiobutton(text='5', value=5, variable=var,
-                   font=('Comic San MS', 24, 'bold'))
-ans1.place(x=10, y=60)
-ans2.place(x=10, y=100)
-ans3.place(x=10, y=140)
-
-btn = Button(text="Ответить", command=press_ans)
-btn.place(x=30, y=200)
+    var = StringVar()
+    var.set("0")
+    n = len(ask["ans"])
+    for i in range(n):
+        ans = Radiobutton(text=ask["ans"][i],
+                          value=ask["ans"][i],
+                          variable=var,
+                           font=('Comic San MS', 12, 'bold'))
+        ans.place(x=10, y=60 + i*30)
+    right_ans = ask["right_ans"]
+    btn = Button(text="Ответить", command=press_ans)
+    btn.place(x=30, y=60 + n*30)
 
 root.mainloop()
 
